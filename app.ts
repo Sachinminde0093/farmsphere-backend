@@ -42,8 +42,7 @@ class App {
         this.socket = new SocketCon(this.io);
         console.log(config.PORT)
         this.port = config.PORT || 8080;
-
-        Mysql.getInstance().getConnection();
+        // Mysql.getInstance().getConnection();
         Psql.getInstance().getClient();
         RedisConnection.getInstance().getClient();
         // this.initialiseDatabaseConnection();
