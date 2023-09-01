@@ -1,5 +1,4 @@
 import express, { Application } from 'express';
-import mongoose from 'mongoose';
 import compression from 'compression';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -47,7 +46,7 @@ class App {
         Mysql.getInstance().getConnection();
         Psql.getInstance().getClient();
         RedisConnection.getInstance().getClient();
-        this.initialiseDatabaseConnection();
+        // this.initialiseDatabaseConnection();
         this.initializeMiddleware();
         this.initialiseControllers(controllers);
         this.initialiseErrorHandling();
@@ -76,29 +75,29 @@ class App {
         this.express.use(ErrorMiddleware);
     }
 
-    private initialiseDatabaseConnection(): void {
+    // private initialiseDatabaseConnection(): void {
 
-        const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH, } = config;
+    //     const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH, } = config;
 
-        const CONNECTION_URL : string = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`
-        try {
-            mongoose.connect(CONNECTION_URL)
-                .then(() => {
-                    console.log('Connected to MongoDB');
+    //     const CONNECTION_URL : string = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`
+    //     try {
+    //         mongoose.connect(CONNECTION_URL)
+    //             .then(() => {
+    //                 console.log('Connected to MongoDB');
                    
-                })
-                .catch((err) => {
-                    console.log(err.message)
-                });
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err.message)
+    //             });
 
-        } catch (error) {
-            console.log(`❌  Failed: Error establishing database connection`);
-            console.error(error);
-            process.exit(1);
-        }
+    //     } catch (error) {
+    //         console.log(`❌  Failed: Error establishing database connection`);
+    //         console.error(error);
+    //         process.exit(1);
+    //     }
 
-        // { useNewUrlParser: true, useUnifiedTopology: true }
-    }
+    //     // { useNewUrlParser: true, useUnifiedTopology: true }
+    // }
 
  
  

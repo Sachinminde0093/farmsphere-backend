@@ -1,6 +1,5 @@
-import { Schema } from "mongoose";
 
-export default interface Token extends Object{
-    id: Schema.Types.ObjectId;
+export default interface Token {
+    id: string;
     expiresIn: number;
 }
