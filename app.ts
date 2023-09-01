@@ -4,9 +4,9 @@ import compression from 'compression';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import dotenv from 'dotenv'
+import Mysql from './mysql';
+import Psql from './psql';
 import config from './credentials/config'
-
 import ErrorMiddleware from './src/middleware/error.middleware';
 import admin from 'firebase-admin';
 // const serviceAccount = require('credentials/firebaseServiceAccountKey.json') 
@@ -16,22 +16,44 @@ import HttpException from './src/utils/exceptions/http.exception';
 
 import { Request, Response, NextFunction } from 'express';
 import Controller from 'utils/interfaces/controller.interface';
+import RedisConnection from './redis.connection';
+
+import { createServer } from "http";
+import { Server } from "socket.io";
+import SocketCon from './socket';
+
+
 
 class App {
 
     public express: Application;
+    private httpServer = createServer(express);
+    private io : Server = new Server(this.httpServer, { 
+        cors: {
+            origin: "http://localhost:3000",
+            methods: ["GET", "POST"],
+          }
+     });
+
     public port: number;
+    public socket : SocketCon;
 
     constructor(controllers: Controller[]) {
         this.express = express()
+        this.socket = new SocketCon(this.io);
         console.log(config.PORT)
         this.port = config.PORT || 8080;
 
+        Mysql.getInstance().getConnection();
+        Psql.getInstance().getClient();
+        RedisConnection.getInstance().getClient();
         this.initialiseDatabaseConnection();
         this.initializeMiddleware();
         this.initialiseControllers(controllers);
         this.initialiseErrorHandling();
     }
+
+    
 
     
     initializeMiddleware(): void {
@@ -58,21 +80,14 @@ class App {
 
         const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH, } = config;
 
-        
-
         const CONNECTION_URL : string = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`
-        // const CONNECTION_URL: string = 'mongodb+srv://sachinminde9359:Sachin@9359$minde@cluster0.ifmjnwo.mongodb.net/HOUSE_HUB';
-        // const uri = `mongodb+srv://sachinminde9359:Sachin9359minde@cluster0.ifmjnwo.mongodb.net/househub`; // Replace with your MongoDB connection URI
-            // console.log(CONNECTION_URL)
         try {
-            const uri = `mongodb+srv://sachinminde9359:Sachin9359minde@cluster0.ifmjnwo.mongodb.net/househub`; // Replace with your MongoDB connection URI
             mongoose.connect(CONNECTION_URL)
                 .then(() => {
                     console.log('Connected to MongoDB');
-                    // Continue with your application logic here
+                   
                 })
                 .catch((err) => {
-                    // throw err;
                     console.log(err.message)
                 });
 
@@ -84,10 +99,12 @@ class App {
 
         // { useNewUrlParser: true, useUnifiedTopology: true }
     }
+
+ 
  
 
     public listen(): void {
-        this.express.listen(this.port, () => {
+        this.httpServer.listen(this.port, () => {
             console.log(`App listen on the port: ${this.port}`);
         });
     }

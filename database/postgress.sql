@@ -1,0 +1,22 @@
+-- CREATE TABLE Conversations (
+--     ConversationID INT PRIMARY KEY,
+--     User1ID uuid NOT NULL,
+--     User2ID uuid NOT NULL,
+--     CreatedAt DATE,
+--     UNIQUE (User1ID, User2ID),
+--     FOREIGN KEY (User1ID) REFERENCES users (User_id),
+--     FOREIGN KEY (User2ID) REFERENCES users (User_id)
+-- );
+
+-- CREATE TABLE Messages (
+--     MessageID INT PRIMARY KEY,
+--     ConversationID INT,
+--     SenderUserID uuid NOT NULL,
+--     ReceiverUserID uuid NOT NULL,
+--     Content TEXT,
+--     CreatedAt DATE,
+--     FOREIGN KEY (ConversationID) REFERENCES Conversations (ConversationID),
+--     FOREIGN KEY (SenderUserID) REFERENCES users (User_id),
+--     FOREIGN KEY (ReceiverUserID) REFERENCES users (User_id)
+-- );
+
