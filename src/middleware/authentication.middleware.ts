@@ -5,7 +5,7 @@ import HttpException from "../utils/exceptions/http.exception";
 import jwt from 'jsonwebtoken';
 import Token from 'utils/interfaces/token.interface';
 import Client from '../../psql';
-import User from '../resources/user/user.interface';
+import User from '../resources/user/interface/user.interface';
 
 async function authenticatedMiddleware(
     req: Request,

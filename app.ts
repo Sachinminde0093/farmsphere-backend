@@ -17,7 +17,8 @@ import { Request, Response, NextFunction } from 'express';
 import Controller from 'utils/interfaces/controller.interface';
 import RedisConnection from './redis.connection';
 
-import { createServer } from "http";
+// const http = require('http')
+import http from 'http';
 import { Server } from "socket.io";
 import SocketCon from './socket';
 
@@ -26,19 +27,21 @@ import SocketCon from './socket';
 class App {
 
     public express: Application;
-    private httpServer = createServer(express);
-    private io : Server = new Server(this.httpServer, { 
-        cors: {
-            origin: "http://localhost:3000",
-            methods: ["GET", "POST"],
-          }
-     });
+    private httpServer:http.Server;
+    private io : Server;
 
     public port: number;
     public socket : SocketCon;
 
     constructor(controllers: Controller[]) {
-        this.express = express()
+        this.express = express(),
+         this.httpServer = new http.Server(this.express);
+         this.io  = new Server(this.httpServer, { 
+            cors: {
+                origin: "http://localhost:3000",
+                methods: ["GET", "POST"],
+              }
+         });
         this.socket = new SocketCon(this.io);
         console.log(config.PORT)
         this.port = config.PORT || 8080;
@@ -103,7 +106,7 @@ class App {
 
     public listen(): void {
         this.httpServer.listen(this.port, () => {
-            console.log(`App listen on the port: ${this.port}`);
+            console.log(`App listen on the port: http://localhost:${this.port}`);
         });
     }
 

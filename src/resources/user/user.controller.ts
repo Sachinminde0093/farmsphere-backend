@@ -26,6 +26,10 @@ class UserController implements Controller {
 
         this.router.get(`${this.path}`,authenticatedMiddleware, this.getUser);
 
+        this.router.post(`${this.path}/createrelation`,authenticatedMiddleware, validationMiddleware(validator.friendRequest), this.createRelation);
+
+        this.router.post(`${this.path}/acceptrequest`,authenticatedMiddleware, validationMiddleware(validator.acceptReauest), this.acceptRelation);
+
     }
 
 
@@ -45,8 +49,9 @@ class UserController implements Controller {
             const result = await this.userService.register(email, password);
 
             res.status(201).send(result);
-        } catch (error) {
-            console.error('Error creating table:', error);
+        } catch (error:any) {
+            next(new HttpException(401, error.message));
+
         }
 
     }
@@ -78,11 +83,39 @@ class UserController implements Controller {
         try {
            
             res.status(200).send(req.user);
-        } catch (error) {
-            
-            console.error('Error creating table:', error);
+        } catch (error:any) {
+
+            next(new HttpException(401, error.message));
         }
     };
+
+    private createRelation = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            await this.userService.createRelation(req);
+            res.status(200).send('request send succesfully');
+        } catch (error:any) {
+            next(new HttpException(401, error.message));
+        }
+    };
+
+    private acceptRelation = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            await this.userService.acceptRequest(req);
+            res.status(200).send('request  accept send succesfully');
+        } catch (error:any) {
+            next(new HttpException(401, error.message));
+        }
+    };
+
+
 
 
 

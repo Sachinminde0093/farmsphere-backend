@@ -25,14 +25,13 @@
 --     FOREIGN KEY (User2ID) REFERENCES users (User_id)
 -- );
 
--- CREATE TABLE Messages (
---     MessageID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
---     ConversationID UUID,
---     SenderUserID UUID,
---     ReceiverUserID UUID,
---     Content TEXT,
---     CreatedAt DATE,
---     FOREIGN KEY (ConversationID) REFERENCES Conversations 	(ConversationID),
---     FOREIGN KEY (SenderUserID) REFERENCES users (user_id),
---     FOREIGN KEY (ReceiverUserID) REFERENCES users (user_id)
+-- CREATE TABLE files (
+--     file_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     post_id uuid NOT NULL,
+-- 	size INTEGER NOT NULL,
+-- 	extension character varying(50) NOT NULL,
+-- 	type character varying(50) NOT NULL,
+--     CreatedAt DATE DEFAULT now() NOT NULL,
+--     FOREIGN KEY (post_id) REFERENCES posts (post_id)
 -- );
+

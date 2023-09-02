@@ -1,7 +1,6 @@
 
 import { Server } from "socket.io";
 import RedisCon from "./redis.connection";
-import { RedisClientType } from "redis";
 
 class SocketCon {
 
@@ -26,7 +25,6 @@ class SocketCon {
           });
           
           });
-
     }
 
 }

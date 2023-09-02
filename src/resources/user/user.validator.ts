@@ -36,5 +36,15 @@ const login = Joi.object({
     // appVersion: Joi.string().required(),
 });
 
-export default { register, login };
+const friendRequest = Joi.object({
+    receiverUserId:Joi.string().required(),
+    relationShipType:Joi.number().required(),
+});
+
+const acceptReauest = Joi.object({
+    receiverUserId:Joi.string().required()
+    // relationshipid:Joi.string().required()
+});
+
+export default { register, login,friendRequest,acceptReauest };
 // module.exports = { register, login };

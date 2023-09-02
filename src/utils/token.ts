@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 
 import Token from './interfaces/token.interface';
-import User from 'resources/user/user.interface';
+import User from 'resources/user/interface/user.interface';
 
 export const createToken = (user: User): string => {
     // console.log(user);
