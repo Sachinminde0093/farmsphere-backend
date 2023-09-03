@@ -71,6 +71,7 @@ class UserService {
         try {
 
             const { receiverUserId, relationShipType } = req.body;
+            
             const query1 = `SELECT * FROM users WHERE user_id = '${receiverUserId}';
                `;
 
@@ -85,7 +86,7 @@ class UserService {
                     `
                 const rel = (await this.client.query(query3)).rows[0];
 
-                // console.log(rel, data);
+                // // console.log(rel, data);
 
                 if (!rel) {
                     if (data.AccType != relationShipType) throw new Error('invalid data provided');
@@ -102,7 +103,7 @@ class UserService {
                         VALUES ('${senderUserId}', '${receiverUserId}','${data.AccType}','${status}');`
 
                     await this.client.query(query2).then((data) => {
-                        console.log(data);
+                        // console.log(data);
                     });
                 }
 
@@ -118,12 +119,12 @@ class UserService {
     public async acceptRequest(req: Request): Promise<void> {
         try {
 
-            const { user_id } = req.body;
+            const  user_id  = req.params.id;
 
             const query1 = `SELECT * FROM users WHERE user_id = '${user_id}';`;
 
             const data = (await this.client.query<User>(query1)).rows[0];
-            console.log(data);
+            // console.log(data);
             if (data) {
 
                 const senderUserId = req.user_id;
@@ -132,7 +133,7 @@ class UserService {
                     WHERE senderuserid = '${senderUserId}' OR receiveruserid = '${user_id}';`
                 const rel: any = (await this.client.query(query3)).rows[0];
 
-                console.log(rel);
+                // console.log(rel);
 
                 if (rel) {
 

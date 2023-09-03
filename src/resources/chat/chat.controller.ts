@@ -13,7 +13,6 @@ class ChatController implements Controller {
 
     constructor() {
         this.initialiseRoutes();
-
     }
 
 

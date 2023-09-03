@@ -28,7 +28,7 @@ class UserController implements Controller {
 
         this.router.post(`${this.path}/createrelation`,authenticatedMiddleware, validationMiddleware(validator.friendRequest), this.createRelation);
 
-        this.router.post(`${this.path}/acceptrequest`,authenticatedMiddleware, validationMiddleware(validator.acceptReauest), this.acceptRelation);
+        this.router.get(`${this.path}/acceptrequest/:id`,authenticatedMiddleware, this.acceptRelation);
 
     }
 

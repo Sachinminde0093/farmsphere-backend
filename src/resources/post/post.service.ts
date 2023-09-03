@@ -19,9 +19,9 @@ class PostService {
 
             await this.client.query(query).then(
                 (data) => {
-                    // console.log(data);
+                    // // console.log(data);
                 }).catch((err) => {
-                    console.log(err);
+                    // console.log(err);
                     throw new Error(err.message);
                 });
 
@@ -40,7 +40,7 @@ class PostService {
             const res = (await this.client.query(query1)).rows[0];
 
 
-            // console.log(res);
+            // // console.log(res);
             if (res) {
                 let query2;
                 if (type == 'image') {
@@ -102,7 +102,7 @@ class PostService {
 
     public async getPostComment(req: Request): Promise<Comment[]> {
         try {
-            const { post_id } = req.body;
+            const  post_id   = req.params.id;
 
             const query = `SELECT * from comments WHERE post_id = '${post_id}';`;
 
@@ -114,7 +114,7 @@ class PostService {
 
     public async likePost(req: Request): Promise<void> {
         try {
-            const { post_id } = req.body;
+            const  post_id   = req.params.id;
             const user_id = req.user_id;
             const query1 = `SELECT * from posts where post_id = '${post_id}'`;
 
@@ -144,7 +144,9 @@ class PostService {
 
     public async likeComment(req: Request): Promise<void> {
         try {
-            const { comment_id } = req.body;
+
+            const  comment_id   = req.params.id;
+
             const user_id = req.user_id;
             const query1 = `SELECT * from comments where comment_id = '${comment_id}'`;
 

@@ -25,7 +25,7 @@ class ImageFileService {
 
             for (let i = 0; i < data.length; i++) {
                 const file = data[i];
-                // console.log(file);
+                // // console.log(file);
                 const options = {
                     version: 'v4',
                     action: 'write',
@@ -55,7 +55,7 @@ class ImageFileService {
 
         try {
 
-            const { post_id } = req.body;
+            const  post_id  = req.params.id;
 
             const query1 = `SELECT * from files where post_id = '${post_id}'`;
 
@@ -67,7 +67,7 @@ class ImageFileService {
                 const fileRef = this.storageRef.file(`images/${file.key}${file.extension}`);
                 const downloadURL = await getDownloadURL(fileRef);
                 images.push(downloadURL);
-                console.log(downloadURL);
+                // console.log(downloadURL);
             }
 
             return images;
@@ -90,7 +90,7 @@ class ImageFileService {
                 const fileRef = this.storageRef.file(`images/${file.key}${file.extension}`);
                 const downloadURL = await getDownloadURL(fileRef);
                 images.push(downloadURL);
-                console.log(downloadURL);
+                // console.log(downloadURL);
             }
 
             return images;
@@ -106,7 +106,7 @@ class ImageFileService {
         try {
 
             const { post_id, file } = req.body;
-            // console.log(file);
+            // // console.log(file);
             const query1 = `SELECT * from posts where post_id = '${post_id}'`;
 
             const res = (await this.client.query(query1)).rows[0];

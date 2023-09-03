@@ -15,7 +15,7 @@ class FileController implements Controller {
 
     initialiseRoutes() {
         this.router.post(`${this.path}/generate-url`, authenticatedMiddleware, this.getUrl);
-        this.router.post(`${this.path}`, authenticatedMiddleware, this.getSignedUrl);
+        this.router.get(`${this.path}/:id`, authenticatedMiddleware, this.getSignedUrl);
         this.router.post(`${this.path}/save`, authenticatedMiddleware, this.saveFile);
     }
 

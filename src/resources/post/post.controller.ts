@@ -24,9 +24,9 @@ class PostController implements Controller {
         this.router.post(`${this.path}/preferences`, authenticatedMiddleware, validationMiddleware(validator.preferences), this.updatePreferences);
         this.router.post(`${this.path}`, authenticatedMiddleware, validationMiddleware(validator.getPost), this.getPost);
         this.router.post(`${this.path}/comment`, authenticatedMiddleware, validationMiddleware(validator.comment), this.createComment);
-        this.router.get(`${this.path}/comment`, authenticatedMiddleware, validationMiddleware(validator.likePost), this.getPostComment);
-        this.router.post(`${this.path}/like`, authenticatedMiddleware, validationMiddleware(validator.likePost), this.likePost);
-        this.router.post(`${this.path}/comment/like`, authenticatedMiddleware, validationMiddleware(validator.likeComment), this.likeComment);
+        this.router.get(`${this.path}/comment/:id`, authenticatedMiddleware, this.getPostComment);
+        this.router.get(`${this.path}/like/:id`, authenticatedMiddleware, this.likePost);
+        this.router.get(`${this.path}/comment/like/:id`, authenticatedMiddleware, this.likeComment);
     }
 
     private createPost = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,8 +42,8 @@ class PostController implements Controller {
 
     private updatePreferences = async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const url =  await this.postService.updatePreferences(req);
-            res.status(201).send({data:'post updated succesfully',url:url });
+            const url = await this.postService.updatePreferences(req);
+            res.status(201).send({ data: 'post updated succesfully', url: url });
         } catch (error: any) {
             next(new HttpException(401, error.message));
 
@@ -52,7 +52,7 @@ class PostController implements Controller {
 
     private getPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
-              const posts:Post[] = await this.postService.getPost(req);
+            const posts: Post[] = await this.postService.getPost(req);
             res.status(200).send(posts);
         } catch (error: any) {
             next(new HttpException(401, error.message));
@@ -72,7 +72,7 @@ class PostController implements Controller {
 
     private getPostComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
-              const posts:Comment[] = await this.postService.getPostComment(req);
+            const posts: Comment[] = await this.postService.getPostComment(req);
             res.status(200).send(posts);
         } catch (error: any) {
             next(new HttpException(401, error.message));
@@ -81,7 +81,7 @@ class PostController implements Controller {
 
     private likePost = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            
+
             await this.postService.likePost(req);
             res.status(201).send('post like succesfully');
         } catch (error: any) {
