@@ -5,7 +5,7 @@ declare global {
     namespace Express {
         export interface Request {
             user: User;
-            user_id:Schema.ObjectId;
+            user_id:string;
             userAgent: string;
             IPAddress:String;
         }

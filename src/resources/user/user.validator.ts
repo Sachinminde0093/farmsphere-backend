@@ -42,7 +42,7 @@ const friendRequest = Joi.object({
 });
 
 const acceptReauest = Joi.object({
-    receiverUserId:Joi.string().required()
+    user_id:Joi.string().required()
     // relationshipid:Joi.string().required()
 });
 

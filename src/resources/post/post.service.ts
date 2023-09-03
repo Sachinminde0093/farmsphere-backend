@@ -1,7 +1,7 @@
 import Psql from "../../../psql";
 import { Request } from "express";
 import Post from "./interface/post.interface";
-import ImageFileService from "../../resources/file/file";
+import ImageFileService from "../file/file.service";
 import FileController from "../../resources/file/file.controller";
 class PostService {
 

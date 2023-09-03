@@ -109,7 +109,7 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             await this.userService.acceptRequest(req);
-            res.status(200).send('request  accept send succesfully');
+            res.status(200).send('request  accept succesfully');
         } catch (error:any) {
             next(new HttpException(401, error.message));
         }

@@ -1,5 +1,5 @@
 
-import ImageFile from "./file";
+import ImageFile from "./file.service";
 
 const ImageFileSchema ={
     key: {

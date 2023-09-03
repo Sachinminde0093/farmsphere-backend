@@ -118,10 +118,9 @@ class UserService {
     public async acceptRequest(req: Request): Promise<void> {
         try {
 
-            const { receiverUserId } = req.body;
+            const { user_id } = req.body;
 
-            const query1 = `SELECT * FROM users WHERE user_id = '${receiverUserId}';
-               `;
+            const query1 = `SELECT * FROM users WHERE user_id = '${user_id}';`;
 
             const data = (await this.client.query<User>(query1)).rows[0];
             console.log(data);
@@ -130,8 +129,7 @@ class UserService {
                 const senderUserId = req.user_id;
 
                 const query3 = `SELECT * FROM userrelations
-                    WHERE senderuserid = '${senderUserId}' OR receiveruserid = '${receiverUserId}';
-                    `
+                    WHERE senderuserid = '${senderUserId}' OR receiveruserid = '${user_id}';`
                 const rel: any = (await this.client.query(query3)).rows[0];
 
                 console.log(rel);
@@ -150,6 +148,22 @@ class UserService {
             }
 
         } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    public async checkConnection(sid: string, rid: string):Promise< boolean | Error> {
+        try {
+
+            const query: string = `SELECT relationshipid FROM userrelations
+             WHERE (senderuserid = '${sid}' AND receiveruserid = '${rid}') OR (senderuserid = '${rid}' AND receiveruserid = '${sid}') LIMIT 1`;
+
+            const res: any = await this.client.query(query);
+            if (res.rowCount == 1) {
+                return true;
+            }
+            return false;
+        } catch (error:any) {
             throw new Error(error.message);
         }
     }
