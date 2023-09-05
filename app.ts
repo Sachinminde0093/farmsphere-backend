@@ -32,20 +32,20 @@ class App {
     private io: Server;
 
     public port: number;
-    public socket: SocketCon;
+    // public socket: SocketCon;
 
     constructor(controllers: Controller[]) {
         this.express = express(),
             this.httpServer = new http.Server(this.express);
         this.io = new Server(this.httpServer, {
-            cors: {
-                origin:["http://localhost:3000", "http://localhost:4000"],
+            // cors: {
+            //     origin:["http://localhost:8080", "http://localhost:4000"],
             
-                methods: ["GET", "POST"],
-            },
-            
+            //     methods: ["GET", "POST"],
+            // },
         });
-        this.socket = new SocketCon(this.io);
+        // this.socket = new SocketCon(this.io);
+        this.chat();
         console.log(config.PORT)
         this.port = config.PORT || 8080;
         // Mysql.getInstance().getConnection();
@@ -71,38 +71,60 @@ class App {
         //     next();
         //   });
 
-        this.io.use(async (socket, next) => {
+        // this.io.use(async (socket, next) => {
 
-            const data = socket.handshake.auth;
-            const bearer = data.token;
+        //     const data = socket.handshake.auth;
+        //     console.log(data, 'data');
+        //     const bearer = data.token;
 
-            // if (!bearer || !bearer.startsWith('Bearer')) {
-            //     console.log('bearer');
-            //    return next(new Error('Unauthorised'));
-            // }
+        //     // if (!bearer || !bearer.startsWith('Bearer')) {
+        //     //     console.log('bearer');
+        //     //    return next(new Error('Unauthorised'));
+        //     // }
 
-            const accessToken = bearer; //.split('Bearer')[1].trim();
-            // const accessToken: string = bearer!;
-            try {
-                const payload: Token | jwt.JsonWebTokenError = await token.verifyToken(accessToken);
+        //     const accessToken = bearer; //.split('Bearer')[1].trim();
+        //     // const accessToken: string = bearer!;
+        //     try {
+        //         const payload: Token | jwt.JsonWebTokenError = await token.verifyToken(accessToken);
 
-                if (payload instanceof jwt.JsonWebTokenError) {
-                    return next(new Error('Unauthorised'));
-                }
+        //         if (payload instanceof jwt.JsonWebTokenError) {
+        //             return next(new Error('Unauthorised'));
+        //         }
 
-                socket.data = {
-                    user_id: payload.id
-                }
-               return next();
-            } catch (error:any) {
-               return next(new Error('Unauthorised'));
-            }
+        //         socket.data = {
+        //             user_id: payload.id
+        //         }
+        //        return next();
+        //     } catch (error:any) {
+        //        return next(new Error('Unauthorised'));
+        //     }
             
 
-        });
+        // });
     }
 
+    private chat() {
 
+        this.io.on("connection", async (socket: any) => {
+    
+        
+          socket.on('caht-box', async (data: any) => {
+            this.io.emit('chat-box',data);
+          })
+    
+          socket.on('disconnect', async () => {
+            try { 
+              console.log(socket.id);
+              // await this.redis.remove(socket.user._id);
+            } catch (error: any) {
+
+              throw new Error(error.message)
+    
+            }
+          });
+    
+        });
+      }
 
     private initialiseControllers(controllers: Controller[]): void {
         controllers.forEach((controller: Controller) => {
@@ -144,7 +166,7 @@ class App {
 
     public listen(): void {
         this.httpServer.listen(this.port, () => {
-            console.log(`App listen on the port: http://localhost:${this.port}`);
+            console.log(`✔ App listen on the port: http://localhost:${this.port}`);
         });
     }
 

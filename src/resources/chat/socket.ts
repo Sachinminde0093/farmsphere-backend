@@ -21,31 +21,34 @@ class SocketCon {
 
     this.io.on("connection", async (socket: any) => {
 
-      try {
-        // add entries for userId and socketId in redis
-        const data = socket.data;
+      // try {
+      //   // add entries for userId and socketId in redis
+      //   const data = socket.data;
+      //   console.log(socket.id);
+      //   await this.redis.set(data.user_id, socket.id );
 
-        await this.redis.set(data.user_id, socket.id );
-
-      } catch (error) {
-          throw (error);
-      }
+      // } catch (error) {
+      //     throw (error);
+      // }
       
+      socket.on('caht-box', async (data: any) => {
+        this.io.emit('chat-box',data);
+      })
 
-      socket.on('chat message', async (data: any) => {
-        try {
-          // console.log(await this.redis.get(data.sid), data.sid);
-          // console.log(await this.redis.get(data.rid), data.rid);
-          await this.saveMessage(data);
-        } catch (error: any) {
-          console.log(error.message);
-          // throw new Error(error.message)
-        }
-      });
+      // socket.on('chat message', async (data: any) => {
+      //   try {
+      //     // // console.log(await this.redis.get(data.sid), data.sid);
+      //     // // console.log(await this.redis.get(data.rid), data.rid);
+      //     await this.saveMessage(data);
+      //   } catch (error: any) {
+      //     // console.log(error.message);
+      //     // throw new Error(error.message)
+      //   }
+      // });
 
       socket.on('disconnect', async () => {
-        try {
-          console.log(socket.data);
+        try { 
+          console.log(socket.id);
           // await this.redis.remove(socket.user._id);
         } catch (error: any) {
           throw new Error(error.message)
@@ -75,15 +78,15 @@ class SocketCon {
         if (receiverSocketId) {
           this.io.to(receiverSocketId).emit('chat message', data.content);
         } else {
-          console.log('offline');
+          // console.log('offline');
         }
       } else {
 
-        console.log("connection not found");
+        // console.log("connection not found");
       }
 
     } catch (error: any) {
-      console.log(error.message);
+      // console.log(error.message);
     }
   }
 

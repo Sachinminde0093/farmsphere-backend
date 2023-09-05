@@ -13,12 +13,12 @@ const app = new App([
      new ChatController(),
     ]);
 
-app.express.get('/', (req, res) =>{
-    res.sendFile(__dirname + '/index.html');
-})
 // app.express.get('/', (req, res) =>{
-//     res.send('you have succesfully reach to farmsphere backend service');
+//     res.sendFile(__dirname + '/index.html');
 // })
+app.express.get('/', (req, res) =>{
+    res.send('you have succesfully reach to farmsphere backend service');
+})
 
  
 
