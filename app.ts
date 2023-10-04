@@ -34,7 +34,7 @@ class App {
     public port: number;
     public socket: SocketCon;
 
-    constructor() {
+    constructor(controllers: Controller[]) {
         this.express = express(),
             this.httpServer = new http.Server(this.express);
         this.io = new Server(this.httpServer, {
