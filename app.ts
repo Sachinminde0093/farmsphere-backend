@@ -32,20 +32,19 @@ class App {
     private io: Server;
 
     public port: number;
-    // public socket: SocketCon;
+    public socket: SocketCon;
 
-    constructor(controllers: Controller[]) {
+    constructor() {
         this.express = express(),
             this.httpServer = new http.Server(this.express);
         this.io = new Server(this.httpServer, {
-            // cors: {
-            //     origin:["http://localhost:8080", "http://localhost:4000"],
+          cors:{
+            origin:["http://localhost:4200"],
             
-            //     methods: ["GET", "POST"],
-            // },
+          }
         });
-        // this.socket = new SocketCon(this.io);
-        this.chat();
+        this.socket = new SocketCon(this.io);
+        // this.chat();
         console.log(config.PORT)
         this.port = config.PORT || 8080;
         // Mysql.getInstance().getConnection();
@@ -64,6 +63,7 @@ class App {
         this.express.use(express.json());
         this.express.use(express.urlencoded({ extended: false }));
         this.express.use(compression());
+        
         // this.io.engine.use((req:Request, res:Response, next:NextFunction) => {
 
         //   console.log(req.body);
@@ -71,43 +71,55 @@ class App {
         //     next();
         //   });
 
-        // this.io.use(async (socket, next) => {
+        this.io.use(async (socket, next) => {
+          
+            const data = socket.handshake.auth;
+            const bearer = data.token;
 
-        //     const data = socket.handshake.auth;
-        //     console.log(data, 'data');
-        //     const bearer = data.token;
+            // if (!bearer || !bearer.startsWith('Bearer')) {
+            //     console.log('bearer');
+            //    return next(new Error('Unauthorised'));
+            // }
 
-        //     // if (!bearer || !bearer.startsWith('Bearer')) {
-        //     //     console.log('bearer');
-        //     //    return next(new Error('Unauthorised'));
-        //     // }
+            const accessToken = bearer; //.split('Bearer')[1].trim();
+            // const accessToken: string = bearer!;
+            try {
+              if(bearer == null){
+                return next(new Error('Unauthorised'));
 
-        //     const accessToken = bearer; //.split('Bearer')[1].trim();
-        //     // const accessToken: string = bearer!;
-        //     try {
-        //         const payload: Token | jwt.JsonWebTokenError = await token.verifyToken(accessToken);
+              }
+                  token.verifyToken(accessToken).then((payload)=>{
 
-        //         if (payload instanceof jwt.JsonWebTokenError) {
-        //             return next(new Error('Unauthorised'));
-        //         }
+                    if (payload instanceof jwt.JsonWebTokenError) {
+                
+                      return next(new Error('Unauthorised'));
+                  }
+                  
+                  socket.data = {
+                      user_id: payload.id
+                  }
+  
+                 return next();
+                }).catch((err)=>{
+                   return next(new Error('Unauthorised'));
 
-        //         socket.data = {
-        //             user_id: payload.id
-        //         }
-        //        return next();
-        //     } catch (error:any) {
-        //        return next(new Error('Unauthorised'));
-        //     }
+                });
+
+                
+            } catch (error:any) {
+               return next(new Error('Unauthorised'));
+            }
             
 
-        // });
+        });
     }
 
     private chat() {
 
         this.io.on("connection", async (socket: any) => {
     
-        
+        console.log(socket.id);
+
           socket.on('caht-box', async (data: any) => {
             this.io.emit('chat-box',data);
           })
